@@ -40,6 +40,7 @@ def predict():
         loccoord='Intersection'
         invtype='Driver'
         injury='None'
+        #default values assigned randomly
         pedestrian=1
         cyclist=1
         automobile=0
@@ -74,6 +75,7 @@ def predict():
             outcome="Non-fatal"
         
         return render_template('index.html', pred=outcome)
+    
 
 
 if __name__ =="__main__":
