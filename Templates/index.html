@@ -5,14 +5,14 @@
         <img src="{{ url_for('static',filename='/images/human-guided.jpg') }}" class="card-img-top rounded"
          alt="data being cleaned sequentially" style="height: 15rem;">
         <div class="card-body">
-            <form class=  "form-inline" role = "form">
+            <form class=  "form-inline" role = "form" action="/predict" method="post">
                 <div class="form-group mb-2">
                     <div class="row">
                         <div class="col-3 mt-1">
                             <label for="district" class="form-label">District</label>
                         </div>
                         <div class="col-9">
-                            <select class="form-control" id="district">
+                            <select class="form-control" id="district" name="district_name">
                             <option>Toronto and East York</option>
                             <option>Etobicoke York </option>
                             <option>Scarborough </option>
@@ -27,7 +27,7 @@
                             <label for="road" class="form-label">Road Class</label>
                         </div>
                         <div class="col-9 ">
-                            <select class="form-control" id="road">
+                            <select class="form-control" id="road" name="road_class">
                                 <option>Major Arterial</option>
                                 <option>Minor Arterial </option>
                                 <option>Collector </option>
@@ -43,7 +43,7 @@
                             <label for="traffctl" class="form-label">Traffic Control</label>
                         </div>
                         <div class="col-9">
-                            <select class="form-control" id="traffctl">
+                            <select class="form-control" id="traffctl" name="traffic_control">
                                 <option>No Control</option>
                                 <option>Traffic Signal </option>
                                 <option>Stop Sign </option>
@@ -64,7 +64,7 @@
                             <label for="visiblity" class="form-label">Visiblity</label>
                         </div>
                         <div class="col-9">
-                            <select class="form-control" id="visiblity">
+                            <select class="form-control" id="visiblity" name="visib_name">
                                 <option>Clear</option>
                                 <option>Rain</option>
                                 <option>Snow </option>
@@ -82,7 +82,7 @@
                             <label for="light" class="form-label">Light</label>
                         </div>
                         <div class="col-9">
-                            <select class="form-control" id="light">
+                            <select class="form-control" id="light" name="light_name">
                                 <option>Daylight</option>
                                 <option>Dark</option>
                                 <option>Dark, artificial  </option>
@@ -104,7 +104,7 @@
                             <label for="impactype" class="form-label">Impact Type</label>
                         </div>
                         <div class="col-9">
-                            <select class="form-control" id="impactype">
+                            <select class="form-control" id="impactype" name="impact_type">
                                 <option>Pedestrian Collisions</option>
                                 <option>Turning Movement</option>
                                 <option>Cyclist Collisions</option>
@@ -123,7 +123,7 @@
                             <label for="invage" class="form-label">Age</label>
                         </div>
                         <div class="col-9">
-                            <select class="form-control" id="invage">
+                            <select class="form-control" id="invage" name="age">
                                 <option>0 to 4</option>
                                 <option>5 to 9</option>
                                 <option>10 to 14</option>
@@ -155,7 +155,7 @@
                             <label for="rdfscond" class="form-label">Road Condition</label>
                         </div>
                         <div class="col-9">    
-                            <select class="form-control" id="rdfscond">
+                            <select class="form-control" id="rdfscond" name="road_condition">
                                 <option>Dry</option>
                                 <option>Wet</option>
                                 <option>Loose Snow </option>
@@ -170,10 +170,13 @@
                 </div>
                 <div class="d-flex justify-content-end mt-3" >
                     <!-- <div class="col-4 justify-content-center"> -->
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Predict Fatality</button>
                     <!-- </div> -->
                 </div>
             </form>
+            <div class="d-flex justify-content-center">
+                    <h2 class="display-3">{{pred | upper}}</h2>
+            </div>
         </div>
     </div>
 </div>
