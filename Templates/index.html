@@ -1,11 +1,11 @@
 {% extends "base.html"%}
 {%block content%}
-<div class="container  mt-4">
+<div class="container mt-2">
     <div class="card mx-auto w-50 shadow-lg">
         <img src="{{ url_for('static',filename='/images/human-guided.jpg') }}" class="card-img-top rounded"
-         alt="data being cleaned sequentially" style="height: 15rem;">
+         alt="data being cleaned sequentially" style="height: 14rem;">
         <div class="card-body">
-            <form class=  "form-inline" role = "form" action="/predict" method="post">
+            <form class="form-inline" id="predictionForm" role = "form" action="/predict" method="POST">
                 <div class="form-group mb-2">
                     <div class="row">
                         <div class="col-3 mt-1">
@@ -26,7 +26,7 @@
                         <div class="col-3 mt-1">
                             <label for="road" class="form-label">Road Class</label>
                         </div>
-                        <div class="col-9 ">
+                        <div class="col-9">
                             <select class="form-control" id="road" name="road_class">
                                 <option>Major Arterial</option>
                                 <option>Minor Arterial </option>
@@ -120,9 +120,24 @@
                 <div class="form-group mb-2">
                     <div class="row">
                         <div class="col-3">
+                            <label for="rdfscond" class="form-label">Road Condition</label>
+                        </div>
+                        <div class="col-3">    
+                            <select class="form-control" id="rdfscond" name="road_condition">
+                                <option>Dry</option>
+                                <option>Wet</option>
+                                <option>Loose Snow </option>
+                                <option>Slush</option>
+                                <option>Ice</option>
+                                <option>Packed Snow</option>
+                                <option>Loose Sand or Gravel</option>
+                                <option>Spilled liquid</option>
+                            </select>
+                        </div>
+                        <div class="col-2">
                             <label for="invage" class="form-label">Age</label>
                         </div>
-                        <div class="col-9">
+                        <div class="col-4">
                             <select class="form-control" id="invage" name="age">
                                 <option>0 to 4</option>
                                 <option>5 to 9</option>
@@ -147,37 +162,49 @@
                                 <option>Over 95</option>
                             </select>
                         </div>
-                    </div>
+                    <!-- </div>
                 </div>
                 <div class="form-group mb-2">
-                    <div class="row">
-                        <div class="col-3">
-                            <label for="rdfscond" class="form-label">Road Condition</label>
-                        </div>
-                        <div class="col-9">    
-                            <select class="form-control" id="rdfscond" name="road_condition">
-                                <option>Dry</option>
-                                <option>Wet</option>
-                                <option>Loose Snow </option>
-                                <option>Slush</option>
-                                <option>Ice</option>
-                                <option>Packed Snow</option>
-                                <option>Loose Sand or Gravel</option>
-                                <option>Spilled liquid</option>
-                            </select>
-                        </div>
+                    <div class="row"> -->
+                        
                     </div>
                 </div>
-                <div class="d-flex justify-content-end mt-3" >
-                    <!-- <div class="col-4 justify-content-center"> -->
-                        <button type="submit" class="btn btn-primary">Predict Fatality</button>
-                    <!-- </div> -->
+                <!-- tag for storing the value of type of model -->
+                <input type="hidden" id="model_type" name="model_type">
+                <div class="row justify-content-end mt-3" >
+                    <div class="col-3">
+                        <button type="submit" id="submitPredictLr"  class="btn" style="background-color: #205484; color:white"  value="lr">Predict LR</button>    
+                    </div>
+                    <div class="col-3">
+                        <button type="submit" id="submitPredictSvm"  class="btn" style="background-color: #205484; color:white"  value="svm">Predict SVM</button>
+                    </div>
+                    <div class="col-3">
+                        <button type="submit" id="submitPredictSvm"  class="btn " style="background-color: #205484; color:white" value="knn" disabled>Predict KNN</button>
+                    </div>
+                    <!-- <button type="submit" id="submitPredict"  class="btn btn-primary">Predict SVM</button> -->
                 </div>
             </form>
-            <div class="d-flex justify-content-center">
-                    <h2 class="display-3">{{pred | upper}}</h2>
+            <!-- Modal -->
+            <div class="modal fade" id="predictionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Prediction</h5>
+                    <!-- <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close"> -->
+                        <!-- <span aria-hidden="true">&times;</span> -->
+                    </button>
+                    </div>
+                    <div class="modal-body text-center">
+                    <h4 id="resultModal"></h4>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-{%endblock %}
+<script src="/static/js/script.js"></script>
+{% endblock %}

@@ -1,3 +1,4 @@
+
 import numpy as np
 from flask import Flask,request,jsonify,render_template
 import pickle as p
@@ -16,10 +17,12 @@ def Home():
     return render_template('index.html')
 
 
-@app.route('/predict',methods = ['POST'])
+@app.route('/predict',methods = ['GET','POST'])
 def predict():
     if request.method == "POST": 
-
+        #get model type from the form
+        model_type = request.form["model_type"]
+        
         # getting user input from HTML form
         district = request.form["district_name"]
         road_class = request.form["road_class"]
@@ -65,17 +68,28 @@ def predict():
                                    alcohol, redlight]], columns=model_columns)
         query=query.reindex()
         
-        prediction=lr.predict(query)
         
+        prediction=model_match(model_type,query)
+        
+
         print(prediction)
-        
-        if prediction[0]==0:
+        outcome = ''
+        if prediction == 0:
             outcome="Fatal"
         else:
             outcome="Non-fatal"
         
-        return render_template('index.html', pred=outcome)
+        return outcome
     
+
+def model_match(case,query):
+    result = ''
+    if case == 'lr':
+        result = lr.predict(query)
+    elif case == 'svm':
+        result = svm.predict(query)
+    return result
+        
 
 
 if __name__ =="__main__":
@@ -84,7 +98,10 @@ if __name__ =="__main__":
     except:
         port = 12345 # If you don't provide any port the port will be set to 12345
 
-    lr = joblib.load('Models/bestmodel_lr.pkl') # Load "model.pkl"
+    lr = joblib.load('Models/bestmodel_lr.pkl') # Load logistic regression model
+    svm = joblib.load('Models/bestmodel_svm.pkl') # Load svm model
+    # svm = joblib.load('Models/bestmodel_knn.pkl') # Load svm model
+    # svm = joblib.load('Models/bestmodel_dtree.pkl') # Load svm model
     print ('Model loaded')
     model_columns = joblib.load('Models/model_columns.pkl') # Load "model_columns.pkl"
     print ('Model columns loaded')

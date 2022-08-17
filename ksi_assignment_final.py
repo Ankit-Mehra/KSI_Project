@@ -31,10 +31,12 @@ from sklearn.tree import DecisionTreeClassifier, export_graphviz
 
 
 
-
-path= "C:/Users/prash/Downloads/"
-filename="KSI.csv"
+import os
+path = os.getcwd()
+filename="Data/KSI.csv"
 fullpath=os.path.join(path, filename)
+print(fullpath)
+
 
 df=pd.read_csv(fullpath)
 df.dtypes
@@ -160,4 +162,98 @@ joblib.dump(pipe_lr, 'pipeline_lr.pkl')
 joblib.dump(df_features, 'model_columns.pkl')
 
 
+#SVM: Ankit Mehra
 
+
+# Helper Function to plot confusion Matrix
+def plot_matrix(clf,X_test,y_test,model:str):
+        # get prediction
+        pred = clf.predict(X_test)
+        confusion_mat = confusion_matrix(y_test,pred)
+        group_names = ['True Neg','False Pos','False Neg','True Pos']
+        fig, axes = plt.subplots(1, figsize=(10, 5))
+
+        group_counts = [f"{value:0.0f}" for value in
+                confusion_mat.flatten()]
+
+        group_percentages = [f"{value:.2%}" for value in
+                        confusion_mat.flatten()/np.sum(confusion_mat)]
+
+        labels = [f"{v1}\n{v2}\n{v3}" for v1, v2, v3 in
+                zip(group_names,group_counts,group_percentages)]
+
+        labels = np.asarray(labels).reshape(2,2)
+        #     plt.figure(figsize= (8,6))
+        ax = sns.heatmap(confusion_mat, annot=labels, 
+                fmt='', cmap='Blues',ax=axes)
+
+        ax.set_title(f"Confusion Matrix for {model} Model\n\n")
+        ax.set_xlabel('\nPredicted Values')
+        ax.set_ylabel('Actual Values ');
+
+        # Ticket labels - List must be in alphabetical order
+        ax.xaxis.set_ticklabels(['False','True'])
+        ax.yaxis.set_ticklabels(['False','True'])
+
+        ## Display the visualization of the Confusion Matrix.
+        plt.show()
+
+
+
+
+# Instantiate a default Support Vector Classifier
+svc = SVC()
+
+# Pipeline Object to streamline the process
+pipeline_svc = Pipeline([
+    ('full', full_pipeline),
+    ('svc', svc)
+    ])
+
+
+pipeline_svc.fit(X_train, Y_train)
+
+scores = cross_val_score(pipeline_svc,
+                        X_train,
+                        Y_train,
+                        cv=10,
+                        n_jobs=-1,
+                        verbose=1)
+print(scores)
+print(scores.mean())
+
+
+# Predictions
+y_pred_svc = pipeline_svc.predict(X_test)
+
+#plot confusion Matrix
+plot_matrix(pipeline_svc,X_test,Y_test,"SVC")
+
+
+#fine Tuning the model
+
+# Dictionary with parameters names (str) as keys and lists of parameter settings to try as values.
+param_grid = {'svc__kernel': ['linear', 'rbf', 'poly'],
+              'svc__C': [0.01, 0.1, 1, 10, 100],
+              'svc__gamma': [0.01, 0.03, 0.1, 0.3, 1.0, 3.0],
+              'svc__degree': [2, 3]}
+
+# Create a GridSearchCV object
+grid_search_svc = GridSearchCV(estimator = pipeline_svc,
+                                 param_grid = param_grid,
+                                 scoring = 'accuracy',
+                                 refit = True,
+                                 n_jobs = -1,
+                                 verbose = 3)
+
+grid_search_svc.fit(X_train, Y_train)
+
+print(grid_search_svc.best_params_)
+print(grid_search_svc.best_estimator_)
+print(grid_search_svc.best_score_)
+
+best_model_svm = grid_search_svc.best_estimator_
+
+plot_matrix(best_model,X_test,Y_test,"SVC")
+joblib.dump(best_model_svm, 'Models/bestmodel_svm.pkl')
+joblib.dump(pipeline_svc, 'Models/pipeline_svc.pkl')
