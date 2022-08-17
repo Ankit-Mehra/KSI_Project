@@ -257,3 +257,41 @@ best_model_svm = grid_search_svc.best_estimator_
 plot_matrix(best_model,X_test,Y_test,"SVC")
 joblib.dump(best_model_svm, 'Models/bestmodel_svm.pkl')
 joblib.dump(pipeline_svc, 'Models/pipeline_svc.pkl')
+
+# K-Nearest Neighbours MODEL: Ayesha
+
+knn = KNeighborsClassifier()
+
+pipe_knn=Pipeline([('full', full_pipeline),
+                            ('knn', KNeighborsClassifier())])
+
+param_grid_knn=[
+    {'knn__n_neighbors':[3,5,11,19],
+    'knn__weights':['uniform', 'distance'],
+    'knn__metric': ['euclidean', 'Manhattan']}]
+
+grid_search_knn=GridSearchCV(estimator=pipe_knn, 
+                          param_grid=param_grid_knn, 
+                          scoring='accuracy', 
+                          refit=True, 
+                          verbose=1,
+                          cv=3)
+
+print(grid_search_knn)
+grid_search_knn.fit(X_train, Y_train.values)
+
+print(f"Best Parameters: {grid_search_knn.best_params_}")
+print(f"Best Estimator: {grid_search_knn.best_estimator_}")
+print(f"Best Accuracy score: {grid_search_knn.best_score_}")
+
+# print(classification_report(grid_search_knn.predict(X_test), Y_test))
+
+best_model=grid_search_knn.best_estimator_
+
+predictions=best_model.predict(X_test)
+
+print(classification_report(predictions, Y_test))
+print(confusion_matrix(Y_test, predictions))
+
+joblib.dump(best_model, 'Models/bestmodel_knn.pkl')
+joblib.dump(pipe_knn, 'Models/pipeline_knn.pkl')
