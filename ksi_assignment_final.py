@@ -263,7 +263,7 @@ joblib.dump(pipeline_svc, 'Models/pipeline_svc.pkl')
 knn = KNeighborsClassifier()
 
 pipe_knn=Pipeline([('full', full_pipeline),
-                            ('knn', KNeighborsClassifier())])
+                    ('knn', KNeighborsClassifier())])
 
 param_grid_knn=[
     {'knn__n_neighbors':[3,5,11,19],
@@ -280,7 +280,7 @@ grid_search_knn=GridSearchCV(estimator=pipe_knn,
 print(grid_search_knn)
 grid_search_knn.fit(X_train, Y_train.values)
 
-print(f"Best Parameters: {grid_search_knn.best_params_}")
+print(f"Best Parameters: {grid_search_knn.best_params_}")   
 print(f"Best Estimator: {grid_search_knn.best_estimator_}")
 print(f"Best Accuracy score: {grid_search_knn.best_score_}")
 

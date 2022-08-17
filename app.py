@@ -78,7 +78,7 @@ def predict():
             outcome="Fatal"
         else:
             outcome="Non-fatal"
-        
+        print(outcome)
         return outcome
     
 
@@ -88,8 +88,8 @@ def model_match(case,query):
         result = lr.predict(query)
     elif case == 'svm':
         result = svm.predict(query)
-    elif case == 'knn':
-        result = knn.predict(query)
+    # elif case == 'knn':
+    #     result = knn.predict(query)
     return result
         
 
@@ -102,8 +102,8 @@ if __name__ =="__main__":
 
     lr = joblib.load('Models/bestmodel_lr.pkl') # Load logistic regression model
     svm = joblib.load('Models/bestmodel_svm.pkl') # Load svm model
-    knn = joblib.load('Models/bestmodel_knn.pkl') # Load KNN model
-    # svm = joblib.load('Models/bestmodel_dtree.pkl') # Load svm model
+    # knn = joblib.load('Models/bestmodel_dt.pkl') # Load KNN model
+    # dt = joblib.load('Models/bestmodel_dtree.pkl') # Load svm model
     print ('Model loaded')
     model_columns = joblib.load('Models/model_columns.pkl') # Load "model_columns.pkl"
     print ('Model columns loaded')
